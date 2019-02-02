@@ -17,6 +17,7 @@ import xml.etree.ElementTree as ElementTree
 import re
 from datetime import datetime
 import json
+from pycircuitbreaker import CircuitBreaker
 
 from webbreaker.common.confighelper import Config
 from webbreaker.common.webbreakerhelper import WebBreakerHelper
@@ -188,7 +189,9 @@ class WebInspectScan:
         if self.webinspect_api.setting_overrides.webinspect_upload_policy and not self.webinspect_api.setting_overrides.scan_policy:
             self.webinspect_api.upload_policy()
 
-    def _scan(self, delay=10):
+    #def _scan(self, delay=10):
+    @CircuitBreaker(fail_max=5, reset_timeout=60)
+    def _scan(self):
         """
         If it returns complete we are
         happy and download the results files. If we enter NotRunning then something has gone wrong and we want to
@@ -224,7 +227,7 @@ class WebInspectScan:
                 elif current_status.lower() != "running":
                     webinspectloghelper.log_error_scan_in_weird_state(scan_name=self.scan_id, state=current_status)
                     sys.exit(ExitStatus.failure)
-                time.sleep(delay)
+                #time.sleep(delay)
 
             # Sometimes we are not able to get current_status and it is a None response.
             except AttributeError as e:

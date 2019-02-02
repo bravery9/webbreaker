@@ -94,8 +94,8 @@ class WebInspectScan:
             self.scan_id = self.webinspect_api.create_scan()
 
             # context manager to handle interrupts properly
-            with self._termination_event_handler():
-                self._scan()
+            #with self._termination_event_handler():
+            self._scan()
 
         except (requests.exceptions.ConnectionError, requests.exceptions.HTTPError) as e:
             webinspectloghelper.log_error_scan_start_failed(e)
@@ -188,7 +188,7 @@ class WebInspectScan:
         if self.webinspect_api.setting_overrides.webinspect_upload_policy and not self.webinspect_api.setting_overrides.scan_policy:
             self.webinspect_api.upload_policy()
 
-    def _scan(self, delay=2):
+    def _scan(self, delay=10):
         """
         If it returns complete we are
         happy and download the results files. If we enter NotRunning then something has gone wrong and we want to

@@ -17,7 +17,7 @@ import xml.etree.ElementTree as ElementTree
 import re
 from datetime import datetime
 import json
-from pycircuitbreaker import CircuitBreaker
+from pybreaker import CircuitBreaker
 
 from webbreaker.common.confighelper import Config
 from webbreaker.common.webbreakerhelper import WebBreakerHelper
